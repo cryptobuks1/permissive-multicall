@@ -270,4 +270,3 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,linux,macos,node,solidity,soliditytruffle,vscode
 cache
-artifacts
