@@ -1,6 +1,10 @@
 pragma solidity ^0.7.3;
 
 
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+/// @title Store
+/// A contract used for testing purposes.
 contract Store {
     uint256 internal value;
 
