@@ -1,11 +1,11 @@
 const { expect } = require("chai");
 const Store = artifacts.require("Store");
-const EnhancedMulticall = artifacts.require("EnhancedMulticall");
+const PermissiveMulticall = artifacts.require("PermissiveMulticall");
 
-describe("EnhancedMulticall", () => {
+describe("PermissiveMulticall", () => {
     let storeA,
         storeB,
-        enhancedMulticall,
+        permissiveMulticall,
         getFunctionAbi,
         getAddFunctionAbi,
         getAnd10FunctionAbi;
@@ -23,20 +23,20 @@ describe("EnhancedMulticall", () => {
             (abiEntry) =>
                 abiEntry.name === "getAnd10" && abiEntry.type === "function"
         );
-        aggregateWithoutRequireFunctionAbi = EnhancedMulticall.abi.find(
+        aggregateWithPermissivenessFunctionAbi = PermissiveMulticall.abi.find(
             (abiEntry) =>
-                abiEntry.name === "aggregateWithoutRequire" &&
+                abiEntry.name === "aggregateWithPermissiveness" &&
                 abiEntry.type === "function"
         );
     });
 
-    describe("Non-enhanced function (multicall retro compatibility)", () => {
-        beforeEach(async () => {
-            storeA = await Store.new();
-            storeB = await Store.new();
-            enhancedMulticall = await EnhancedMulticall.new();
-        });
+    beforeEach(async () => {
+        storeA = await Store.new();
+        storeB = await Store.new();
+        permissiveMulticall = await PermissiveMulticall.new();
+    });
 
+    describe("Non-permissive function", () => {
         it("should correctly setup the test environment", async () => {
             expect((await storeA.get()).toNumber()).to.equal(0);
             await storeA.set(100);
@@ -46,7 +46,7 @@ describe("EnhancedMulticall", () => {
         });
 
         it("should work with a single call", async () => {
-            const result = await enhancedMulticall.aggregate.call([
+            const result = await permissiveMulticall.aggregate.call([
                 [
                     storeA.address,
                     web3.eth.abi.encodeFunctionCall(getFunctionAbi, []),
@@ -62,7 +62,7 @@ describe("EnhancedMulticall", () => {
 
         it("should work with multiple calls", async () => {
             await storeA.set(123);
-            const result = await enhancedMulticall.aggregate.call([
+            const result = await permissiveMulticall.aggregate.call([
                 [
                     storeA.address,
                     web3.eth.abi.encodeFunctionCall(getFunctionAbi, []),
@@ -88,7 +88,7 @@ describe("EnhancedMulticall", () => {
 
         it("should work with a single call with a single argument", async () => {
             await storeA.set(123);
-            const result = await enhancedMulticall.aggregate.call([
+            const result = await permissiveMulticall.aggregate.call([
                 [
                     storeA.address,
                     web3.eth.abi.encodeFunctionCall(getAddFunctionAbi, [1]),
@@ -109,7 +109,7 @@ describe("EnhancedMulticall", () => {
                 getAddFunctionAbi,
                 [1]
             );
-            const result = await enhancedMulticall.aggregate.call([
+            const result = await permissiveMulticall.aggregate.call([
                 [storeA.address, encodedFunctionCall],
                 [storeB.address, encodedFunctionCall],
             ]);
@@ -129,7 +129,7 @@ describe("EnhancedMulticall", () => {
 
         it("should work with a single call with a multi-return", async () => {
             await storeA.set(123);
-            const result = await enhancedMulticall.aggregate.call([
+            const result = await permissiveMulticall.aggregate.call([
                 [
                     storeA.address,
                     web3.eth.abi.encodeFunctionCall(getAnd10FunctionAbi, []),
@@ -144,13 +144,7 @@ describe("EnhancedMulticall", () => {
         });
     });
 
-    describe("Enhanced function (no success requirement)", () => {
-        beforeEach(async () => {
-            storeA = await Store.new();
-            storeB = await Store.new();
-            enhancedMulticall = await EnhancedMulticall.new();
-        });
-
+    describe("Permissive function", () => {
         it("should correctly setup the test environment", async () => {
             expect((await storeA.get()).toNumber()).to.equal(0);
             await storeA.set(100);
@@ -160,7 +154,7 @@ describe("EnhancedMulticall", () => {
         });
 
         it("should work with a single call", async () => {
-            const result = await enhancedMulticall.aggregateWithoutRequire.call(
+            const result = await permissiveMulticall.aggregateWithPermissiveness.call(
                 [
                     [
                         storeA.address,
@@ -178,7 +172,7 @@ describe("EnhancedMulticall", () => {
 
         it("should work with multiple calls", async () => {
             await storeA.set(123);
-            const result = await enhancedMulticall.aggregateWithoutRequire.call(
+            const result = await permissiveMulticall.aggregateWithPermissiveness.call(
                 [
                     [
                         storeA.address,
@@ -206,7 +200,7 @@ describe("EnhancedMulticall", () => {
 
         it("should work with a single call with a single argument", async () => {
             await storeA.set(123);
-            const result = await enhancedMulticall.aggregateWithoutRequire.call(
+            const result = await permissiveMulticall.aggregateWithPermissiveness.call(
                 [
                     [
                         storeA.address,
@@ -229,7 +223,7 @@ describe("EnhancedMulticall", () => {
                 getAddFunctionAbi,
                 [1]
             );
-            const result = await enhancedMulticall.aggregateWithoutRequire.call(
+            const result = await permissiveMulticall.aggregateWithPermissiveness.call(
                 [
                     [storeA.address, encodedFunctionCall],
                     [storeB.address, encodedFunctionCall],
@@ -251,7 +245,7 @@ describe("EnhancedMulticall", () => {
 
         it("should work with a single call with a multi-return", async () => {
             await storeA.set(123);
-            const result = await enhancedMulticall.aggregateWithoutRequire.call(
+            const result = await permissiveMulticall.aggregateWithPermissiveness.call(
                 [
                     [
                         storeA.address,
@@ -272,7 +266,7 @@ describe("EnhancedMulticall", () => {
 
         it("should work with a faulty call and a non-faulty one", async () => {
             await storeA.set(123);
-            const result = await enhancedMulticall.aggregateWithoutRequire.call(
+            const result = await permissiveMulticall.aggregateWithPermissiveness.call(
                 [
                     [
                         storeA.address,
@@ -280,7 +274,7 @@ describe("EnhancedMulticall", () => {
                     ],
                     // faulty call
                     [
-                        enhancedMulticall.address,
+                        permissiveMulticall.address,
                         web3.eth.abi.encodeFunctionCall(
                             getAnd10FunctionAbi,
                             []
@@ -302,17 +296,17 @@ describe("EnhancedMulticall", () => {
 
         it("should work with multiple faulty calls", async () => {
             await storeA.set(123);
-            const result = await enhancedMulticall.aggregateWithoutRequire.call(
+            const result = await permissiveMulticall.aggregateWithPermissiveness.call(
                 [
                     [
-                        enhancedMulticall.address,
+                        permissiveMulticall.address,
                         web3.eth.abi.encodeFunctionCall(
                             getAnd10FunctionAbi,
                             []
                         ),
                     ],
                     [
-                        enhancedMulticall.address,
+                        permissiveMulticall.address,
                         web3.eth.abi.encodeFunctionCall(
                             getAnd10FunctionAbi,
                             []

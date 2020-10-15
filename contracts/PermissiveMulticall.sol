@@ -4,8 +4,8 @@ pragma experimental ABIEncoderV2;
 
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-/// @title Enhanced muticall
-contract EnhancedMulticall {
+/// @title Permissive multicall
+contract PermissiveMulticall {
     struct Call {
         address target;
         bytes callData;
@@ -18,7 +18,8 @@ contract EnhancedMulticall {
 
     /// @dev Performs multiple calls in the same operation.
     ///      If one of the calls in the list fails, everything does,
-    ///      and the operation is reverted.
+    ///      and the operation is reverted. Kept to preserve
+    ///      compatibility with Multicall v1.
     /// @param calls An array specifying the required data to perform calls.
     /// @return blockNumber The current block number
     /// @return returnData A bytes array containing each of the performed calls return data.
@@ -45,7 +46,7 @@ contract EnhancedMulticall {
     /// @return blockNumber The current block number
     /// @return callOutcomes A `CallOutcome` array containing each of the performed calls return
     ///         data and success specifier.
-    function aggregateWithoutRequire(Call[] memory calls)
+    function aggregateWithPermissiveness(Call[] memory calls)
         public
         returns (uint256 blockNumber, CallOutcome[] memory callOutcomes)
     {
