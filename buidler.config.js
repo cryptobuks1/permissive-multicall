@@ -10,6 +10,11 @@ module.exports = {
             accounts: [process.env.PRIVATE_KEY],
             gasPrice: 0,
         },
+        sokol: {
+            url: "https://sokol.poa.network",
+            accounts: [process.env.PRIVATE_KEY],
+            gasPrice: 1000000000,
+        },
     },
     solc: {
         version: "0.7.3",
