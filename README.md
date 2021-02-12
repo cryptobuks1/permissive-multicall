@@ -22,7 +22,8 @@ Some important commands include:
 
 ## Deployments
 
-| Network | Address                                    |
-| ------- | ------------------------------------------ |
-| Mainnet | 0x0946f567d0ed891e6566c1da8e5093517f43571d |
-| Rinkeby | 0x798d8ced4dff8f054a5153762187e84751a73344 |
+| Network             | Address                                    |
+| ------------------- | ------------------------------------------ |
+| Mainnet             | 0x0946f567d0ed891e6566c1da8e5093517f43571d |
+| Rinkeby             | 0x798d8ced4dff8f054a5153762187e84751a73344 |
+| Arbitrum testnet v3 | 0x73a08DC74eF4ed2c360199244bb69F1464204E7C |
