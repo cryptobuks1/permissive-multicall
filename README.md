@@ -28,3 +28,4 @@ Some important commands include:
 | Rinkeby             | 0x798d8ced4dff8f054a5153762187e84751a73344 |
 | Arbitrum testnet v3 | 0x73a08DC74eF4ed2c360199244bb69F1464204E7C |
 | Sokol               | 0x4D97Bd8eFaCf46b33c4438Ed0B7B6AABfa2359FB |
+| xDAI                | 0x4E75068ED2338fCa56631E740B0723A6dbc1d5CD |
